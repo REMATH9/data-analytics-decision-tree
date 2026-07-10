@@ -1,105 +1,277 @@
 def recommend(answers):
+
     score = calculate_score(answers)
 
-    architecture = ""
-    modelisation = ""
-    storage_mode = ""
-    transformation = ""
-    semantic_layer = ""
-    security = ""
+    volume = answers["volume"]
+    sources_count = answers["sources_count"]
+    source_types = answers["source_types"]
+
+    history = answers["history"]
+    multi_reports = answers["multi_reports"]
+    realtime = answers["realtime"]
+    self_service = answers["self_service"]
+    sensitive_data = answers["sensitive_data"]
+
+    architecture = "Power BI standard"
+    modelisation = "Star Schema"
 
     why = []
     risks = []
     next_steps = []
     alternatives = []
 
-    volume = answers["volume"]
-    sources_count = answers["sources_count"]
-    source_types = answers["source_types"]
-    frequency = answers["frequency"]
-    history = answers["history"]
-    multi_reports = answers["multi_reports"]
-    self_service = answers["self_service"]
-    sensitive_data = answers["sensitive_data"]
-    realtime = answers["realtime"]
-    quality = answers["quality"]
-    transformations = answers["transformations"]
-    business_definitions = answers["business_definitions"]
-
     excel_only = source_types == ["Excel"]
     multiple_sources = sources_count != "1 source"
-    medium_volume = volume == "5M à 50M lignes"
-    big_volume = volume in ["50M à 500M lignes", "Plus de 500M lignes"]
-    very_big_volume = volume == "Plus de 500M lignes"
-    frequent_refresh = frequency in ["Horaire", "Temps réel"]
 
-    if excel_only and volume in ["Moins de 500k lignes", "500k à 5M lignes"] and not multi_reports and not history:
+    if (
+        excel_only
+        and volume in [
+            "Moins de 500k lignes",
+            "500k à 5M lignes"
+        ]
+        and not history
+        and not multi_reports
+    ):
+
         architecture = "Power BI simple"
         modelisation = "Modèle Power BI en étoile léger"
-        storage_mode = "Import"
-        transformation = "Power Query"
-        semantic_layer = "Dataset local"
 
         why.append(
-            "Les données semblent simples, peu volumineuses et principalement basées sur Excel."
+            "Les données sont peu volumineuses et principalement issues d'Excel."
         )
+
         why.append(
-            "Un modèle Power BI simple permet de répondre rapidement au besoin sans mettre en place une architecture trop lourde."
+            "Une architecture légère est suffisante dans ce contexte."
         )
 
-        next_steps.append("Nettoyer et structurer les fichiers Excel sources.")
-        next_steps.append("Créer un modèle Power BI simple avec une table principale et quelques dimensions.")
-        next_steps.append("Valider les indicateurs avec les utilisateurs métier.")
-        next_steps.append("Documenter les sources utilisées.")
+        next_steps.extend([
+            "Structurer les fichiers sources.",
+            "Construire un modèle Power BI simple.",
+            "Valider les indicateurs métier."
+        ])
 
-    elif realtime or very_big_volume:
+    elif realtime or volume == "Plus de 500M lignes":
+
         architecture = "Lakehouse / Fabric"
         modelisation = "Star Schema sur couche Gold"
-        storage_mode = "Direct Lake ou modèle composite"
-        transformation = "Pipeline ELT"
-        semantic_layer = "Semantic Model partagé"
 
         why.append(
-            "Le volume très important ou le besoin de temps réel dépasse le cadre d’un simple modèle Power BI."
-        )
-        why.append(
-            "Une architecture Lakehouse permet de conserver les données brutes, de les nettoyer progressivement et de les exposer proprement à Power BI."
-        )
-        why.append(
-            "Cette approche est plus adaptée lorsque les données doivent évoluer vers des usages avancés comme l’IA, l’IoT ou l’analyse temps réel."
+            "Le volume très important ou le besoin de temps réel nécessite une architecture scalable."
         )
 
-        next_steps.append("Identifier les sources à intégrer dans le Lakehouse.")
-        next_steps.append("Définir les couches Bronze, Silver et Gold.")
-        next_steps.append("Créer les tables prêtes à l’analyse dans la couche Gold.")
-        next_steps.append("Construire un Semantic Model partagé pour Power BI.")
-        next_steps.append("Mettre en place un monitoring des traitements et des rafraîchissements.")
+        why.append(
+            "Un Lakehouse permet de gérer les gros volumes et les données brutes."
+        )
 
-    elif big_volume:
+        next_steps.extend([
+            "Définir les couches Bronze, Silver et Gold.",
+            "Construire un modèle analytique partagé.",
+            "Mettre en place les pipelines d'alimentation."
+        ])
+
+    elif volume in [
+        "50M à 500M lignes",
+        "Plus de 500M lignes"
+    ]:
+
         architecture = "Data Warehouse"
         modelisation = "Star Schema"
-        storage_mode = "Import avec Incremental Refresh ou Composite Model"
-        transformation = "SQL / ELT"
-        semantic_layer = "Semantic Model partagé"
 
         why.append(
-            "Le volume de données est important et nécessite de préparer les données avant leur chargement dans Power BI."
-        )
-        why.append(
-            "Un Data Warehouse permet de centraliser, nettoyer et structurer les données pour plusieurs rapports."
-        )
-        why.append(
-            "Le modèle en étoile améliore la lisibilité, les performances et la maintenance des rapports Power BI."
+            "Le volume nécessite une préparation des données avant Power BI."
         )
 
-        next_steps.append("Identifier les tables de faits : ventes, commandes, production, stock, etc.")
-        next_steps.append("Identifier les dimensions : date, client, produit, site, équipe, fournisseur, etc.")
-        next_steps.append("Créer une table calendrier fiable.")
-        next_steps.append("Préparer les transformations lourdes en SQL ou dans une couche Data dédiée.")
-        next_steps.append("Mettre en place l’actualisation incrémentielle si l’historique est important.")
+        why.append(
+            "Un Data Warehouse améliore les performances et la gouvernance."
+        )
+
+        next_steps.extend([
+            "Identifier les tables de faits.",
+            "Créer les dimensions.",
+            "Mettre en place une table calendrier."
+        ])
 
     elif multiple_sources or history or multi_reports:
+
         architecture = "Data Mart ou Data Warehouse"
         modelisation = "Star Schema"
-        storage_mode = "Import optimisé"
-        transformation = "SQL + Power Query
+
+        why.append(
+            "Plusieurs sources ou plusieurs rapports nécessitent une couche centrale."
+        )
+
+        why.append(
+            "Un modèle partagé permet d'éviter des définitions contradictoires."
+        )
+
+        next_steps.extend([
+            "Définir les clés communes.",
+            "Construire un modèle en étoile.",
+            "Centraliser les indicateurs."
+        ])
+
+    else:
+
+        why.append(
+            "Le contexte reste compatible avec une approche Power BI classique."
+        )
+
+        next_steps.extend([
+            "Formaliser les besoins métier.",
+            "Créer le modèle de données.",
+            "Construire les premiers rapports."
+        ])
+
+    if sensitive_data:
+
+        risks.append(
+            "Les droits d'accès doivent être définis avant publication."
+        )
+
+        next_steps.append(
+            "Mettre en place une sécurité RLS."
+        )
+
+    if answers["quality"] in [
+        "Moyenne",
+        "Mauvaise",
+        "Inconnue"
+    ]:
+
+        risks.append(
+            "La qualité des données peut impacter la fiabilité des indicateurs."
+        )
+
+        next_steps.append(
+            "Mettre en place des contrôles qualité."
+        )
+
+    if not answers["business_definitions"]:
+
+        risks.append(
+            "Les définitions métier des KPIs ne sont pas encore validées."
+        )
+
+        next_steps.append(
+            "Créer un dictionnaire métier."
+        )
+
+    if self_service:
+
+        next_steps.append(
+            "Prévoir un Semantic Model partagé."
+        )
+
+    executive_summary = (
+        f"Architecture recommandée : {architecture}. "
+        f"Modélisation recommandée : {modelisation}. "
+        f"Volume analysé : {volume}. "
+        f"Sources : {', '.join(source_types)}."
+    )
+
+    industrialisation = build_industrialisation(score)
+
+    alternatives.append({
+        "solution": "Cube OLAP",
+        "why_not": (
+            "Plus complexe à mettre en œuvre qu'un Semantic Model moderne."
+        ),
+        "chosen": architecture
+    })
+
+    alternatives.append({
+        "solution": "Snowflake Schema",
+        "why_not": (
+            "Plus complexe que le Star Schema pour la majorité des projets Power BI."
+        ),
+        "chosen": modelisation
+    })
+
+    alternatives.append({
+        "solution": "DirectQuery",
+        "why_not": (
+            "Le mode Import offre généralement de meilleures performances."
+        ),
+        "chosen": architecture
+    })
+
+    return {
+        "score": score,
+        "architecture": architecture,
+        "modelisation": modelisation,
+        "executive_summary": executive_summary,
+        "why": why,
+        "industrialisation": industrialisation,
+        "alternatives": alternatives,
+        "risks": list(dict.fromkeys(risks)),
+        "next_steps": list(dict.fromkeys(next_steps))
+    }
+
+
+def calculate_score(answers):
+
+    score = 0
+
+    if answers["sources_count"] == "2 à 5 sources":
+        score += 15
+
+    elif answers["sources_count"] == "Plus de 5 sources":
+        score += 25
+
+    volume = answers["volume"]
+
+    if volume == "500k à 5M lignes":
+        score += 10
+
+    elif volume == "5M à 50M lignes":
+        score += 20
+
+    elif volume == "50M à 500M lignes":
+        score += 40
+
+    elif volume == "Plus de 500M lignes":
+        score += 50
+
+    if answers["history"]:
+        score += 15
+
+    if answers["multi_reports"]:
+        score += 15
+
+    if answers["self_service"]:
+        score += 10
+
+    if answers["sensitive_data"]:
+        score += 10
+
+    if answers["realtime"]:
+        score += 20
+
+    return min(score, 100)
+
+
+def build_industrialisation(score):
+
+    if score < 25:
+        return (
+            "Niveau 1 - Rapport autonome"
+        )
+
+    if score < 50:
+        return (
+            "Niveau 2 - Power BI maîtrisé"
+        )
+
+    if score < 75:
+        return (
+            "Niveau 3 - Semantic Model partagé"
+        )
+
+    if score < 90:
+        return (
+            "Niveau 4 - Data Warehouse"
+        )
+
+    return (
+        "Niveau 5 - Lakehouse / Fabric entreprise"
+    )
