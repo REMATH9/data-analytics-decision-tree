@@ -7,12 +7,15 @@ from streamlit_mermaid_interactive import mermaid
 from utils.concepts import load_concepts
 
 
+st.set_page_config(layout="wide")
+
 st.title("Diagrammes existants")
 
 DIAGRAMS_DIR = Path("diagrams")
 
 
 def extract_mermaid(markdown_text):
+
     pattern = r"```mermaid\s*(.*?)```"
 
     match = re.search(
@@ -27,7 +30,31 @@ def extract_mermaid(markdown_text):
     return ""
 
 
-def display_concept(concept_name, concepts):
+def enhance_mermaid(
+    diagram_code,
+    font_size
+):
+    """
+    Injecte automatiquement
+    la taille du texte.
+    """
+
+    return f"""
+%%{{init: {{
+    "theme": "default",
+    "themeVariables": {{
+        "fontSize": "{font_size}px"
+    }}
+}}}}%%
+
+{diagram_code}
+"""
+
+
+def display_concept(
+    concept_name,
+    concepts
+):
 
     if concept_name not in concepts:
 
@@ -47,17 +74,29 @@ def display_concept(concept_name, concepts):
 
     if "definition" in detail:
 
-        st.markdown("### Définition")
-        st.write(detail["definition"])
+        st.markdown(
+            "### Définition"
+        )
+
+        st.write(
+            detail["definition"]
+        )
 
     if "explication_simple" in detail:
 
-        st.markdown("### Explication simple")
-        st.write(detail["explication_simple"])
+        st.markdown(
+            "### Explication simple"
+        )
+
+        st.write(
+            detail["explication_simple"]
+        )
 
     if "exemple" in detail:
 
-        st.markdown("### Exemple")
+        st.markdown(
+            "### Exemple"
+        )
 
         st.code(
             detail["exemple"],
@@ -66,31 +105,51 @@ def display_concept(concept_name, concepts):
 
     if "quand_utiliser" in detail:
 
-        st.markdown("### Quand utiliser ?")
+        st.markdown(
+            "### Quand utiliser ?"
+        )
 
-        for item in detail["quand_utiliser"]:
+        for item in detail[
+            "quand_utiliser"
+        ]:
 
-            st.write(f"✅ {item}")
+            st.write(
+                f"✅ {item}"
+            )
 
     if "avantages" in detail:
 
-        st.markdown("### Avantages")
+        st.markdown(
+            "### Avantages"
+        )
 
-        for item in detail["avantages"]:
+        for item in detail[
+            "avantages"
+        ]:
 
-            st.write(f"✅ {item}")
+            st.write(
+                f"✅ {item}"
+            )
 
     if "limites" in detail:
 
-        st.markdown("### Limites")
+        st.markdown(
+            "### Limites"
+        )
 
-        for item in detail["limites"]:
+        for item in detail[
+            "limites"
+        ]:
 
-            st.write(f"⚠️ {item}")
+            st.write(
+                f"⚠️ {item}"
+            )
 
     if "exemple_metier" in detail:
 
-        st.markdown("### Exemple métier")
+        st.markdown(
+            "### Exemple métier"
+        )
 
         st.info(
             detail["exemple_metier"]
@@ -106,13 +165,13 @@ files = sorted(
 if not files:
 
     st.warning(
-        "Aucun diagramme trouvé dans le dossier diagrams."
+        "Aucun diagramme trouvé."
     )
 
 else:
 
-    col1, col2 = st.columns(
-        [3, 1]
+    col1, col2, col3 = st.columns(
+        [4, 1, 1]
     )
 
     with col1:
@@ -126,11 +185,19 @@ else:
     with col2:
 
         diagram_height = st.slider(
-            "Hauteur du diagramme",
-            400,
-            2500,
-            1000,
-            100
+            "Hauteur",
+            500,
+            3000,
+            1200
+        )
+
+    with col3:
+
+        font_size = st.slider(
+            "Texte",
+            10,
+            40,
+            24
         )
 
     content = selected_file.read_text(
@@ -156,10 +223,15 @@ else:
     if not diagram_code:
 
         st.error(
-            "Aucun bloc Mermaid trouvé."
+            "Aucun diagramme Mermaid trouvé."
         )
 
     else:
+
+        diagram_code = enhance_mermaid(
+            diagram_code,
+            font_size
+        )
 
         st.markdown(
             f"""
@@ -175,7 +247,7 @@ else:
         result = mermaid(
             diagram_code,
             theme="neutral",
-            key=f"{selected_file.name}_{diagram_height}"
+            key=f"{selected_file.name}_{font_size}_{diagram_height}"
         )
 
         if isinstance(
