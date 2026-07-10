@@ -28,25 +28,19 @@ def extract_mermaid(markdown_text):
     return ""
 
 
-def enhance_mermaid(
-    diagram_code,
-    font_size
-):
-    """
-    On garde le thème Mermaid par défaut.
-    Aucun changement de couleur.
-    Seulement la taille de police.
-    """
+def enhance_mermaid(diagram_code):
 
     return f"""
 %%{{init: {{
   "theme": "default",
   "flowchart": {{
       "useMaxWidth": false,
-      "htmlLabels": true
+      "htmlLabels": true,
+      "nodeSpacing": 50,
+      "rankSpacing": 80
   }},
   "themeVariables": {{
-      "fontSize": "{font_size}px"
+      "fontSize": "16px"
   }}
 }}}}%%
 
@@ -165,37 +159,11 @@ if not files:
 
 else:
 
-    col1, col2, col3 = st.columns(
-        [4, 1, 1]
+    selected_file = st.selectbox(
+        "Diagramme",
+        files,
+        format_func=lambda x: x.name
     )
-
-    with col1:
-
-        selected_file = st.selectbox(
-            "Diagramme",
-            files,
-            format_func=lambda x: x.name
-        )
-
-    with col2:
-
-        diagram_height = st.slider(
-            "Hauteur",
-            1000,
-            6000,
-            3500,
-            100
-        )
-
-    with col3:
-
-        font_size = st.slider(
-            "Texte",
-            12,
-            60,
-            28,
-            2
-        )
 
     content = selected_file.read_text(
         encoding="utf-8"
@@ -232,16 +200,15 @@ else:
     else:
 
         diagram_code = enhance_mermaid(
-            diagram_code,
-            font_size
+            diagram_code
         )
 
         st.markdown(
-            f"""
+            """
             <style>
-            iframe {{
-                min-height:{diagram_height}px !important;
-            }}
+            iframe {
+                min-height:1000px !important;
+            }
             </style>
             """,
             unsafe_allow_html=True
@@ -250,7 +217,7 @@ else:
         result = mermaid(
             diagram_code,
             theme="default",
-            key=f"{selected_file.name}_{font_size}_{diagram_height}"
+            key=f"{selected_file.name}"
         )
 
         if (
