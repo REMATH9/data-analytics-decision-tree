@@ -6,10 +6,12 @@ from streamlit_mermaid_interactive import mermaid
 
 from utils.concepts import load_concepts
 
+st.set_page_config(
+    page_title="Diagrammes",
+    layout="wide"
+)
 
-st.set_page_config(layout="wide")
-
-st.title("Diagrammes existants")
+st.title("📊 Diagrammes Data Analytics")
 
 DIAGRAMS_DIR = Path("diagrams")
 
@@ -34,16 +36,29 @@ def enhance_mermaid(
     diagram_code,
     font_size
 ):
-    """
-    Injecte automatiquement
-    la taille du texte.
-    """
-
     return f"""
 %%{{init: {{
-    "theme": "default",
+    "theme": "base",
+
+    "flowchart": {{
+        "useMaxWidth": false,
+        "htmlLabels": true
+    }},
+
     "themeVariables": {{
-        "fontSize": "{font_size}px"
+
+        "fontSize": "{font_size}px",
+
+        "primaryColor": "#2563eb",
+        "primaryTextColor": "#ffffff",
+        "primaryBorderColor": "#60a5fa",
+
+        "lineColor": "#60a5fa",
+
+        "secondaryColor": "#facc15",
+        "tertiaryColor": "#16a34a",
+
+        "background": "#ffffff"
     }}
 }}}}%%
 
@@ -59,12 +74,14 @@ def display_concept(
     if concept_name not in concepts:
 
         st.info(
-            f"Aucune fiche détaillée trouvée pour : {concept_name}"
+            f"Aucune fiche trouvée pour : {concept_name}"
         )
 
         return
 
-    detail = concepts[concept_name]
+    detail = concepts[
+        concept_name
+    ]
 
     st.divider()
 
@@ -89,7 +106,9 @@ def display_concept(
         )
 
         st.write(
-            detail["explication_simple"]
+            detail[
+                "explication_simple"
+            ]
         )
 
     if "exemple" in detail:
@@ -152,7 +171,9 @@ def display_concept(
         )
 
         st.info(
-            detail["exemple_metier"]
+            detail[
+                "exemple_metier"
+            ]
         )
 
 
@@ -177,7 +198,7 @@ else:
     with col1:
 
         selected_file = st.selectbox(
-            "Choisir un diagramme",
+            "Diagramme",
             files,
             format_func=lambda x: x.name
         )
@@ -186,33 +207,41 @@ else:
 
         diagram_height = st.slider(
             "Hauteur",
-            500,
-            3000,
-            1200
+            1000,
+            5000,
+            2500,
+            100
         )
 
     with col3:
 
         font_size = st.slider(
             "Texte",
-            10,
-            40,
-            24
+            16,
+            60,
+            36,
+            2
         )
 
     content = selected_file.read_text(
         encoding="utf-8"
     )
 
+    title = selected_file.stem
+
     lines = content.splitlines()
 
-    title = (
-        lines[0]
-        .replace("#", "")
-        .strip()
-        if lines
-        else selected_file.name
-    )
+    if lines:
+
+        first_line = lines[0]
+
+        if first_line.startswith("#"):
+
+            title = (
+                first_line
+                .replace("#", "")
+                .strip()
+            )
 
     st.header(title)
 
@@ -236,9 +265,12 @@ else:
         st.markdown(
             f"""
             <style>
+
             iframe {{
-                min-height: {diagram_height}px !important;
+                min-height:
+                    {diagram_height}px !important;
             }}
+
             </style>
             """,
             unsafe_allow_html=True
@@ -250,25 +282,25 @@ else:
             key=f"{selected_file.name}_{font_size}_{diagram_height}"
         )
 
-        if isinstance(
-            result,
-            dict
+        if (
+            isinstance(result, dict)
+            and result.get(
+                "entity_clicked"
+            )
         ):
 
             clicked = result.get(
                 "entity_clicked"
             )
 
-            if clicked:
+            st.success(
+                f"Concept sélectionné : {clicked}"
+            )
 
-                st.success(
-                    f"Concept sélectionné : {clicked}"
-                )
-
-                display_concept(
-                    clicked,
-                    concepts
-                )
+            display_concept(
+                clicked,
+                concepts
+            )
 
     with st.expander(
         "Voir le markdown source"
