@@ -690,24 +690,11 @@ def render_focus_tab(items, compact):
     )
 
 
-def render_mobile_tips():
-    with st.expander("Conseils d’utilisation mobile", expanded=False):
-        st.markdown(
-            """
-- Utilise la recherche pour aller directement au concept voulu.
-- Active la vue courte pour éviter de trop scroller.
-- Utilise l’onglet `Accès direct` pour ouvrir une seule définition à la fois.
-- Les catégories et niveaux ne sont plus dans le titre pour garder une navigation propre.
-- Utilise `Voir aussi` pour passer d’un concept lié à l’autre.
-"""
-        )
-
-
 def render_summary(results, total):
     st.markdown(
         f"""
         <div style="
-            background:#f5f7fa;
+            background:#FF0000;
             border:1px solid #e2e8f0;
             border-radius:12px;
             padding:12px 16px;
