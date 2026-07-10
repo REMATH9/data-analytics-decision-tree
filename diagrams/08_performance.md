@@ -1,9 +1,6 @@
 # 08 - Performance
 
 ```mermaid
-# 08 - Performance
-
-```mermaid
 flowchart TD
 
 A[Performance]
@@ -40,7 +37,7 @@ J -- Oui --> J1[Passer en Import]
 J -- Non --> J2[Optimiser DirectQuery]
 
 D -- Non --> K[Test de charge]
-D -- Oui --> L{Aggregations nécessaires ?}
+D -- Oui --> L{Agrégations nécessaires ?}
 
 K --> L
 
@@ -69,5 +66,3 @@ N2 --> O
 
 O --> P[Etape suivante : Calculs]
 ```
-```
-`
