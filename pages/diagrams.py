@@ -6,12 +6,9 @@ from streamlit_mermaid_interactive import mermaid
 
 from utils.concepts import load_concepts
 
-st.set_page_config(
-    page_title="Diagrammes",
-    layout="wide"
-)
 
-st.title("📊 Diagrammes Data Analytics")
+st.title("Diagrammes")
+
 
 DIAGRAMS_DIR = Path("diagrams")
 
@@ -36,30 +33,17 @@ def enhance_mermaid(
     diagram_code,
     font_size
 ):
+
     return f"""
 %%{{init: {{
-    "theme": "base",
-
-    "flowchart": {{
-        "useMaxWidth": false,
-        "htmlLabels": true
-    }},
-
-    "themeVariables": {{
-
-        "fontSize": "{font_size}px",
-
-        "primaryColor": "#2563eb",
-        "primaryTextColor": "#ffffff",
-        "primaryBorderColor": "#60a5fa",
-
-        "lineColor": "#60a5fa",
-
-        "secondaryColor": "#facc15",
-        "tertiaryColor": "#16a34a",
-
-        "background": "#ffffff"
-    }}
+  "theme": "default",
+  "flowchart": {{
+      "useMaxWidth": false,
+      "htmlLabels": true
+  }},
+  "themeVariables": {{
+      "fontSize": "{font_size}px"
+  }}
 }}}}%%
 
 {diagram_code}
@@ -79,9 +63,7 @@ def display_concept(
 
         return
 
-    detail = concepts[
-        concept_name
-    ]
+    detail = concepts[concept_name]
 
     st.divider()
 
@@ -208,8 +190,8 @@ else:
         diagram_height = st.slider(
             "Hauteur",
             1000,
-            5000,
-            2500,
+            6000,
+            3000,
             100
         )
 
@@ -217,9 +199,9 @@ else:
 
         font_size = st.slider(
             "Texte",
-            16,
-            60,
-            36,
+            14,
+            80,
+            28,
             2
         )
 
@@ -227,9 +209,9 @@ else:
         encoding="utf-8"
     )
 
-    title = selected_file.stem
-
     lines = content.splitlines()
+
+    title = selected_file.stem
 
     if lines:
 
@@ -265,12 +247,9 @@ else:
         st.markdown(
             f"""
             <style>
-
             iframe {{
-                min-height:
-                    {diagram_height}px !important;
+                min-height:{diagram_height}px !important;
             }}
-
             </style>
             """,
             unsafe_allow_html=True
@@ -278,12 +257,15 @@ else:
 
         result = mermaid(
             diagram_code,
-            theme="neutral",
+            theme="default",
             key=f"{selected_file.name}_{font_size}_{diagram_height}"
         )
 
         if (
-            isinstance(result, dict)
+            isinstance(
+                result,
+                dict
+            )
             and result.get(
                 "entity_clicked"
             )
