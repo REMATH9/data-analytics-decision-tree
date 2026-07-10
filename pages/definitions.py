@@ -1,6 +1,7 @@
 # pages/definitions.py
 # -*- coding: utf-8 -*-
 
+import re
 import streamlit as st
 
 try:
@@ -14,60 +15,130 @@ except Exception:
 
 CATEGORY_RULES = {
     "Architecture Data": [
-        "data warehouse", "data mart", "lakehouse", "bronze", "silver", "gold",
-        "fabric", "databricks", "data vault", "warehouse"
+        "data warehouse",
+        "data mart",
+        "lakehouse",
+        "bronze",
+        "silver",
+        "gold",
+        "fabric",
+        "databricks",
+        "data vault",
+        "warehouse",
     ],
     "Modélisation BI": [
-        "star", "snowflake", "flat", "dimension", "fait", "faits",
-        "transactionnelle", "snapshot", "pont", "many", "relation", "schema"
+        "star",
+        "snowflake",
+        "flat",
+        "dimension",
+        "fait",
+        "faits",
+        "transactionnelle",
+        "snapshot",
+        "pont",
+        "many",
+        "relation",
+        "schema",
     ],
     "Sécurité": [
-        "rls", "ols", "sécurité", "security", "gateway"
+        "rls",
+        "ols",
+        "sécurité",
+        "security",
+        "gateway",
     ],
     "Pipelines et ingestion": [
-        "pipeline", "etl", "elt", "factory", "ssis", "staging", "cdc",
-        "streaming", "rejet", "zone de rejet", "dataflows"
+        "pipeline",
+        "etl",
+        "elt",
+        "factory",
+        "ssis",
+        "staging",
+        "cdc",
+        "streaming",
+        "rejet",
+        "zone de rejet",
+        "dataflows",
     ],
     "Power BI et modèles sémantiques": [
-        "semantic", "dataset", "datasets", "cube", "analysis services",
-        "direct lake", "composite", "agrégation", "cardinalité", "tabulaire"
+        "semantic",
+        "dataset",
+        "datasets",
+        "cube",
+        "analysis services",
+        "direct lake",
+        "composite",
+        "agrégation",
+        "agregation",
+        "cardinalité",
+        "cardinalite",
+        "tabulaire",
     ],
     "Gouvernance": [
-        "gouvernance", "steward", "self-service", "dictionnaire", "culture data"
+        "gouvernance",
+        "steward",
+        "self-service",
+        "dictionnaire",
+        "culture data",
     ],
 }
 
 
 LEVEL_RULES = {
     "Débutant": [
-        "flat table", "data mart", "dimension", "table de faits",
-        "pipeline simple", "datasets", "gateway"
+        "flat table",
+        "data mart",
+        "dimension modèle simple",
+        "pipeline simple",
+        "datasets",
+        "gateway",
     ],
     "Intermédiaire": [
-        "data warehouse", "star schema", "snowflake", "rls", "ols",
-        "incremental refresh", "dataflows", "semantic model", "table d’agrégation",
-        "table d'agrégation", "réduire la cardinalité", "scd type 1"
+        "data warehouse",
+        "star schema",
+        "snowflake",
+        "rls",
+        "ols",
+        "incremental refresh",
+        "dataflows",
+        "semantic model",
+        "semantic model partagé",
+        "table d’agrégation",
+        "table d'agrégation",
+        "réduire la cardinalité",
+        "reduire la cardinalite",
+        "scd type 1",
+        "tables de faits",
+        "relations many-to-one",
     ],
     "Avancé": [
-        "lakehouse", "direct lake", "composite model", "data vault",
-        "cdc", "event streaming", "scd type 2", "fabric", "databricks",
-        "azure analysis services"
+        "lakehouse",
+        "direct lake",
+        "composite model",
+        "data vault",
+        "cdc",
+        "event streaming",
+        "scd type 2",
+        "fabric",
+        "databricks",
+        "azure analysis services",
+        "relations many-to-many",
+        "table de pont",
     ],
 }
 
 
 RELATED_RULES = {
-    "Incremental Refresh": [
-        "CDC - Change Data Capture",
-        "Staging avec date de modification",
-        "Table d’agrégation",
-        "Réduire la cardinalité",
+    "Data Warehouse": [
+        "Data Mart",
+        "Star Schema",
+        "Semantic Model partagé",
+        "SQL View",
     ],
-    "CDC - Change Data Capture": [
-        "Incremental Refresh",
-        "Staging avec date de modification",
-        "Pipeline ELT",
-        "Log technique minimal",
+    "Data Mart": [
+        "Data Warehouse",
+        "Star Schema",
+        "Semantic Model partagé",
     ],
     "Lakehouse": [
         "Couches Bronze / Silver / Gold",
@@ -98,16 +169,17 @@ RELATED_RULES = {
         "Dimension modèle simple",
         "Relations many-to-one",
     ],
-    "Data Warehouse": [
-        "Data Mart",
-        "Star Schema",
-        "Semantic Model partagé",
-        "SQL View",
+    "Incremental Refresh": [
+        "CDC - Change Data Capture",
+        "Staging avec date de modification",
+        "Table d’agrégation",
+        "Réduire la cardinalité",
     ],
-    "Data Mart": [
-        "Data Warehouse",
-        "Star Schema",
-        "Semantic Model partagé",
+    "CDC - Change Data Capture": [
+        "Incremental Refresh",
+        "Staging avec date de modification",
+        "Pipeline ELT",
+        "Log technique minimal",
     ],
     "RLS - Row Level Security": [
         "OLS - Object Level Security",
@@ -160,6 +232,39 @@ SECTION_ORDER = [
 ]
 
 
+LEVEL_COLORS = {
+    "Débutant": "#2e7d32",
+    "Intermédiaire": "#ef6c00",
+    "Avancé": "#c62828",
+}
+
+
+CATEGORY_COLORS = {
+    "Architecture Data": "#1f4e79",
+    "Modélisation BI": "#5b2c83",
+    "Sécurité": "#8b0000",
+    "Pipelines et ingestion": "#006064",
+    "Power BI et modèles sémantiques": "#b8860b",
+    "Gouvernance": "#455a64",
+    "Autres": "#616161",
+}
+
+
+def safe_key(value):
+    value = str(value or "")
+    value = value.lower()
+    value = re.sub(r"[^a-z0-9_]+", "_", value)
+    value = re.sub(r"_+", "_", value)
+    return value.strip("_") or "key"
+
+
+def rerun_app():
+    try:
+        st.rerun()
+    except Exception:
+        st.experimental_rerun()
+
+
 def normalize(value):
     return str(value or "").lower().strip()
 
@@ -173,11 +278,13 @@ def to_text(value):
 
     if isinstance(value, list):
         parts = []
+
         for element in value:
             if isinstance(element, tuple) and len(element) == 2:
                 parts.append(f"{element[0]} {element[1]}")
             else:
                 parts.append(str(element))
+
         return " ".join(parts)
 
     if isinstance(value, tuple):
@@ -216,6 +323,8 @@ def build_search_blob(item):
     values = [
         item.get("title", ""),
         item.get("definition", ""),
+        item.get("category", ""),
+        item.get("level", ""),
         to_text(item.get("why", [])),
         to_text(item.get("when", [])),
         item.get("eloy", ""),
@@ -225,6 +334,7 @@ def build_search_blob(item):
         to_text(item.get("questions", [])),
         to_text(item.get("errors", [])),
     ]
+
     return normalize(" ".join(values))
 
 
@@ -236,6 +346,7 @@ def match_query(item, query):
     blob = build_search_blob(item)
 
     terms = [x.strip() for x in query.split() if x.strip()]
+
     if not terms:
         return True
 
@@ -244,8 +355,10 @@ def match_query(item, query):
 
 def get_initial_letter(item):
     title = item.get("title", "").strip()
+
     if not title:
         return "#"
+
     return title[0].upper()
 
 
@@ -260,6 +373,40 @@ def enrich_definitions():
         enriched.append(clean_item)
 
     return sorted(enriched, key=lambda x: normalize(x.get("title", "")))
+
+
+def render_badge(label, color):
+    st.markdown(
+        f"""
+        <span style="
+            display:inline-block;
+            background:{color};
+            color:white;
+            padding:4px 10px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:600;
+            margin-right:6px;
+            margin-bottom:6px;
+            white-space:nowrap;
+        ">
+            {label}
+        </span>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_meta_side(item):
+    category = item.get("category", "Autres")
+    level = item.get("level", "Intermédiaire")
+
+    category_color = CATEGORY_COLORS.get(category, "#616161")
+    level_color = LEVEL_COLORS.get(level, "#616161")
+
+    st.markdown("##### Informations")
+    render_badge(category, category_color)
+    render_badge(level, level_color)
 
 
 def render_bullets(items):
@@ -322,12 +469,13 @@ def render_definition_short(item):
     st.info(item.get("eloy", "Non renseigné."))
 
     errors = item.get("errors", [])
+
     if errors:
         st.markdown("#### Erreurs classiques à éviter")
         render_bullets(errors[:4])
 
 
-def render_related_links(current_title, all_items):
+def render_related_links(current_title, all_items, context):
     related_titles = RELATED_RULES.get(current_title, [])
 
     if not related_titles:
@@ -341,28 +489,39 @@ def render_related_links(current_title, all_items):
 
     st.markdown("#### Voir aussi")
 
-    cols = st.columns(1)
+    key = f"related_select_{safe_key(context)}_{safe_key(current_title)}"
 
-    for related_title in related_titles:
-        if st.button(related_title, key=f"related_{current_title}_{related_title}", use_container_width=True):
-            st.session_state["selected_definition"] = related_title
-            st.rerun()
+    selected = st.selectbox(
+        "Concept lié",
+        ["-- Sélectionner --"] + related_titles,
+        key=key,
+    )
+
+    if selected != "-- Sélectionner --":
+        st.session_state["selected_definition"] = selected
+        rerun_app()
 
 
-def render_card(item, all_items, compact=False, force_open=False):
+def render_card(item, all_items, compact=False, force_open=False, context="default"):
     title = item.get("title", "Sans titre")
-    category = item.get("category", "Autres")
-    level = item.get("level", "Intermédiaire")
 
-    label = f"{title} | {category} | {level}"
+    with st.expander(title, expanded=force_open):
+        left, right = st.columns([4, 1.4])
 
-    with st.expander(label, expanded=force_open):
+        with left:
+            st.markdown(f"### {title}")
+
+        with right:
+            render_meta_side(item)
+
+        st.markdown("---")
+
         if compact:
             render_definition_short(item)
         else:
             render_definition_full(item)
 
-        render_related_links(title, all_items)
+        render_related_links(title, all_items, context=context)
 
 
 def render_direct_access(items):
@@ -458,7 +617,12 @@ def render_results_tab(results, all_items, compact):
         return
 
     for item in results:
-        render_card(item, all_items, compact=compact)
+        render_card(
+            item,
+            all_items,
+            compact=compact,
+            context=f"results_{item.get('title', '')}",
+        )
 
 
 def render_category_tab(results, all_items, compact):
@@ -474,7 +638,12 @@ def render_category_tab(results, all_items, compact):
         st.subheader(category)
 
         for item in category_items:
-            render_card(item, all_items, compact=compact)
+            render_card(
+                item,
+                all_items,
+                compact=compact,
+                context=f"category_{category}_{item.get('title', '')}",
+            )
 
 
 def render_index_tab(results):
@@ -484,16 +653,14 @@ def render_index_tab(results):
 
     for item in results:
         title = item.get("title", "")
-        category = item.get("category", "Autres")
-        level = item.get("level", "Intermédiaire")
 
         if st.button(
-            f"{title} | {category} | {level}",
-            key=f"index_{title}",
+            title,
+            key=f"index_{safe_key(title)}",
             use_container_width=True,
         ):
             st.session_state["selected_definition"] = title
-            st.rerun()
+            rerun_app()
 
 
 def render_focus_tab(items, compact):
@@ -519,6 +686,7 @@ def render_focus_tab(items, compact):
         items,
         compact=compact,
         force_open=True,
+        context=f"focus_{selected_item.get('title', '')}",
     )
 
 
@@ -529,10 +697,27 @@ def render_mobile_tips():
 - Utilise la recherche pour aller directement au concept voulu.
 - Active la vue courte pour éviter de trop scroller.
 - Utilise l’onglet `Accès direct` pour ouvrir une seule définition à la fois.
-- Utilise les boutons `Voir aussi` pour passer d’un concept lié à l’autre.
-- Les schémas restent en bloc texte afin de rester lisibles sur smartphone.
+- Les catégories et niveaux ne sont plus dans le titre pour garder une navigation propre.
+- Utilise `Voir aussi` pour passer d’un concept lié à l’autre.
 """
         )
+
+
+def render_summary(results, total):
+    st.markdown(
+        f"""
+        <div style="
+            background:#f5f7fa;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            padding:12px 16px;
+            margin-bottom:12px;
+        ">
+            <strong>{len(results)}</strong> définition(s) trouvée(s) sur <strong>{total}</strong>.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def main():
@@ -560,8 +745,8 @@ def main():
     )
 
     st.markdown("---")
-    st.write(f"**{len(results)} définition(s) trouvée(s)** sur {len(items)}.")
 
+    render_summary(results, len(items))
     render_mobile_tips()
 
     tab_focus, tab_results, tab_categories, tab_index = st.tabs(
