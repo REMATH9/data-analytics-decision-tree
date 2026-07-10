@@ -1,1 +1,17 @@
+{
+  "Power BI simple": {
+    "niveau": "Débutant"
+  },
 
+  "Power BI optimisé": {
+    "niveau": "Intermédiaire"
+  },
+
+  "Data Warehouse": {
+    "niveau": "Avancé"
+  },
+
+  "Lakehouse / Fabric": {
+    "niveau": "Expert"
+  }
+}
