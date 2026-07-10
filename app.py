@@ -11,7 +11,7 @@ st.title("Data Analytics Decision Tree")
 st.markdown("""
 Bienvenue dans le guide interactif Data Analytics.
 
-Utilisez le menu de gauche pour :
+Utilisez le menu de gauche pour accéder aux modules :
 
 - Diagnostic interactif
 - Diagrammes existants
