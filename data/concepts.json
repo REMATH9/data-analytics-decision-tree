@@ -1,1 +1,115 @@
+{
+  "Star Schema": {
+    "definition": "Modèle recommandé pour Power BI.",
+    "explication_simple": "Une table centrale contient les faits et plusieurs dimensions permettent l'analyse.",
+    "exemple": "Fact_Ventes -> Dim_Client, Dim_Date, Dim_Produit",
+    "quand_utiliser": [
+      "Power BI",
+      "Reporting",
+      "Data Warehouse"
+    ],
+    "avantages": [
+      "Simple",
+      "Performant",
+      "Facile à comprendre"
+    ],
+    "limites": [
+      "Moins normalisé qu'un Snowflake"
+    ],
+    "exemple_metier": "Analyse des ventes par client, produit et période."
+  },
 
+  "Snowflake": {
+    "definition": "Variante normalisée du Star Schema.",
+    "explication_simple": "Les dimensions sont séparées en plusieurs sous-tables.",
+    "exemple": "Fact_Ventes -> Dim_Produit -> Dim_Famille",
+    "quand_utiliser": [
+      "Dimensions complexes",
+      "Référentiels volumineux"
+    ],
+    "avantages": [
+      "Moins de redondance",
+      "Référentiels normalisés"
+    ],
+    "limites": [
+      "Plus complexe",
+      "Moins lisible dans Power BI"
+    ],
+    "exemple_metier": "Catalogue produit avec plusieurs hiérarchies."
+  },
+
+  "Data Warehouse": {
+    "definition": "Plateforme centralisée de données.",
+    "explication_simple": "Toutes les données importantes de l'entreprise sont regroupées dans un seul endroit.",
+    "exemple": "ERP + CRM + Excel -> Data Warehouse -> Power BI",
+    "quand_utiliser": [
+      "Plusieurs sources",
+      "Historisation",
+      "Plusieurs rapports"
+    ],
+    "avantages": [
+      "Source unique de vérité",
+      "Réutilisable",
+      "Historisation"
+    ],
+    "limites": [
+      "Nécessite davantage de conception"
+    ],
+    "exemple_metier": "Centralisation des ventes, stocks et commandes."
+  },
+
+  "Lakehouse": {
+    "definition": "Architecture moderne combinant Data Lake et Data Warehouse.",
+    "explication_simple": "Permet de conserver les données brutes et les données prêtes à l'analyse.",
+    "exemple": "Bronze -> Silver -> Gold",
+    "quand_utiliser": [
+      "Très gros volumes",
+      "IoT",
+      "IA"
+    ],
+    "avantages": [
+      "Très scalable",
+      "Conservation des données brutes"
+    ],
+    "limites": [
+      "Plus complexe à mettre en place"
+    ],
+    "exemple_metier": "Historique machines et capteurs industriels."
+  },
+
+  "Semantic Model": {
+    "definition": "Couche centralisée contenant mesures et logique métier.",
+    "explication_simple": "Les KPIs sont calculés une seule fois puis réutilisés dans tous les rapports.",
+    "exemple": "Dashboard Direction + Dashboard Finance -> Semantic Model",
+    "quand_utiliser": [
+      "Plusieurs rapports",
+      "Self-Service BI"
+    ],
+    "avantages": [
+      "KPIs cohérents",
+      "Maintenance simplifiée"
+    ],
+    "limites": [
+      "Nécessite de la gouvernance"
+    ],
+    "exemple_metier": "Chiffre d'affaires et marge calculés une seule fois."
+  },
+
+  "Cube OLAP": {
+    "definition": "Structure multidimensionnelle historique.",
+    "explication_simple": "Permet l'analyse par client, produit, date et région.",
+    "exemple": "Produit -> Région -> Temps",
+    "quand_utiliser": [
+      "SSAS",
+      "Gouvernance avancée"
+    ],
+    "avantages": [
+      "Très rapide",
+      "Mesures centralisées"
+    ],
+    "limites": [
+      "Plus complexe qu'un Semantic Model moderne"
+    ],
+    "exemple_metier": "Analyse multidimensionnelle internationale."
+  }
+}
