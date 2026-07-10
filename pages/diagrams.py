@@ -149,11 +149,12 @@ else:
         )
 
     with col2:
-
-        zoom = st.slider(
-            "Zoom",
-            50,
-            300,
+        st.markdown("### Affichage")
+        diagram_height = st.slider(
+            "Hauteur du diagramme",
+            400,       
+            2500,      
+            900,       
             100
         )
 
