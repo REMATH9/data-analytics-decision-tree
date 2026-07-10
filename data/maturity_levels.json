@@ -1,1 +1,26 @@
+{
+  "1": {
+    "title": "Rapport autonome",
+    "description": "Power BI simple"
+  },
 
+  "2": {
+    "title": "Power BI maîtrisé",
+    "description": "Modèle optimisé"
+  },
+
+  "3": {
+    "title": "Semantic Model partagé",
+    "description": "Mesures centralisées"
+  },
+
+  "4": {
+    "title": "Data Warehouse",
+    "description": "Architecture robuste"
+  },
+
+  "5": {
+    "title": "Lakehouse entreprise",
+    "description": "Architecture moderne"
+  }
+}
