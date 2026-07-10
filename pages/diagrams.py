@@ -1,40 +1,242 @@
 from pathlib import Path
+import re
 
 import streamlit as st
+from streamlit_mermaid_interactive import mermaid
 
-st.title("Diagrammes")
+from utils.concepts import load_concepts
+
+
+st.title("Diagrammes existants")
 
 DIAGRAMS_DIR = Path("diagrams")
+
+
+def extract_mermaid(markdown_text):
+    pattern = r"```mermaid\s*(.*?)```"
+
+    match = re.search(
+        pattern,
+        markdown_text,
+        re.DOTALL
+    )
+
+    if match:
+        return match.group(1).strip()
+
+    return ""
+
+
+def display_concept(
+    concept_name,
+    concepts
+):
+
+    if concept_name not in concepts:
+        st.info(
+            f"Aucune fiche détaillée trouvée pour : {concept_name}"
+        )
+        return
+
+    detail = concepts[concept_name]
+
+    st.divider()
+
+    st.subheader(
+        f"📚 {concept_name}"
+    )
+
+    if "definition" in detail:
+        st.markdown(
+            "### Définition"
+        )
+        st.write(
+            detail["definition"]
+        )
+
+    if "explication_simple" in detail:
+        st.markdown(
+            "### Explication simple"
+        )
+        st.write(
+            detail["explication_simple"]
+        )
+
+    if "exemple" in detail:
+        st.markdown(
+            "### Exemple"
+        )
+
+        st.code(
+            detail["exemple"],
+            language="text"
+        )
+
+    if "quand_utiliser" in detail:
+
+        st.markdown(
+            "### Quand utiliser ?"
+        )
+
+        for item in detail[
+            "quand_utiliser"
+        ]:
+            st.write(
+                f"✅ {item}"
+            )
+
+    if "avantages" in detail:
+
+        st.markdown(
+            "### Avantages"
+        )
+
+        for item in detail[
+            "avantages"
+        ]:
+            st.write(
+                f"✅ {item}"
+            )
+
+    if "limites" in detail:
+
+        st.markdown(
+            "### Limites"
+        )
+
+        for item in detail[
+            "limites"
+        ]:
+            st.write(
+                f"⚠️ {item}"
+            )
+
+    if "exemple_metier" in detail:
+
+        st.markdown(
+            "### Exemple métier"
+        )
+
+        st.info(
+            detail["exemple_metier"]
+        )
+
+
+concepts = load_concepts()
 
 files = sorted(
     DIAGRAMS_DIR.glob("*.md")
 )
 
 if not files:
-    st.warn*ng("Aucun diagramme trouvé.")
-else*
 
-    selected = st.selectbox(
-   *    "Diagramme",
-        files,
-  *     format_func=lambda x: x.name
-*   )
-
-    zoom = st.slider(
-      * "Zoom",
-        50,
-        300,
-*       100
+    st.warning(
+        "Aucun diagramme trouvé dans le dossier diagrams."
     )
 
-    content = se*ected.read_text(
-        encoding=*utf-8"
+else:
+
+    col1, col2 = st.columns(
+        [3, 1]
     )
 
-    st.markdown(
-   *    f"""
-<div style="zoom:{zoom}%;*>
-<pre>{content}</pre>
-</div>
-""",*        unsafe_allow_html=True
-   *)
+    with col1:
+
+        selected_file = st.selectbox(
+            "Choisir un diagramme",
+            files,
+            format_func=lambda x: x.name
+        )
+
+    with col2:
+
+        zoom = st.slider(
+            "Zoom",
+            50,
+            300,
+            100
+        )
+
+    content = selected_file.read_text(
+        encoding="utf-8"
+    )
+
+    lines = content.splitlines()
+
+    title = (
+        lines[0]
+        .replace("#", "")
+        .strip()
+        if lines
+        else selected_file.name
+    )
+
+    st.header(title)
+
+    diagram_code = extract_mermaid(
+        content
+    )
+
+    if not diagram_code:
+
+        st.error(
+            "Aucun bloc Mermaid trouvé."
+        )
+
+    else:
+
+        st.markdown(
+            f"""
+            <style>
+            .zoom-container {{
+                zoom:{zoom}%;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.markdown(
+            '<div class="zoom-container">',
+            unsafe_allow_html=True
+        )
+
+        result = mermaid(
+            diagram_code,
+            theme="neutral",
+            key=selected_file.name
+        )
+
+        st.markdown(
+            "</div>",
+            unsafe_allow_html=True
+        )
+
+        if isinstance(
+            result,
+            dict
+        ):
+
+            clicked = result.get(
+                "entity_clicked"
+            )
+
+            if clicked:
+
+                st.success(
+                    f"Concept sélectionné : {clicked}"
+                )
+
+                display_concept(
+                    clicked,
+                    concepts
+                )
+
+    with st.expander(
+        "Voir le markdown source"
+    ):
+
+        st.code(
+            content,
+            language="markdown"
+        )
