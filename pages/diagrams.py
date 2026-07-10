@@ -27,15 +27,14 @@ def extract_mermaid(markdown_text):
     return ""
 
 
-def display_concept(
-    concept_name,
-    concepts
-):
+def display_concept(concept_name, concepts):
 
     if concept_name not in concepts:
+
         st.info(
             f"Aucune fiche détaillée trouvée pour : {concept_name}"
         )
+
         return
 
     detail = concepts[concept_name]
@@ -47,25 +46,18 @@ def display_concept(
     )
 
     if "definition" in detail:
-        st.markdown(
-            "### Définition"
-        )
-        st.write(
-            detail["definition"]
-        )
+
+        st.markdown("### Définition")
+        st.write(detail["definition"])
 
     if "explication_simple" in detail:
-        st.markdown(
-            "### Explication simple"
-        )
-        st.write(
-            detail["explication_simple"]
-        )
+
+        st.markdown("### Explication simple")
+        st.write(detail["explication_simple"])
 
     if "exemple" in detail:
-        st.markdown(
-            "### Exemple"
-        )
+
+        st.markdown("### Exemple")
 
         st.code(
             detail["exemple"],
@@ -74,48 +66,31 @@ def display_concept(
 
     if "quand_utiliser" in detail:
 
-        st.markdown(
-            "### Quand utiliser ?"
-        )
+        st.markdown("### Quand utiliser ?")
 
-        for item in detail[
-            "quand_utiliser"
-        ]:
-            st.write(
-                f"✅ {item}"
-            )
+        for item in detail["quand_utiliser"]:
+
+            st.write(f"✅ {item}")
 
     if "avantages" in detail:
 
-        st.markdown(
-            "### Avantages"
-        )
+        st.markdown("### Avantages")
 
-        for item in detail[
-            "avantages"
-        ]:
-            st.write(
-                f"✅ {item}"
-            )
+        for item in detail["avantages"]:
+
+            st.write(f"✅ {item}")
 
     if "limites" in detail:
 
-        st.markdown(
-            "### Limites"
-        )
+        st.markdown("### Limites")
 
-        for item in detail[
-            "limites"
-        ]:
-            st.write(
-                f"⚠️ {item}"
-            )
+        for item in detail["limites"]:
+
+            st.write(f"⚠️ {item}")
 
     if "exemple_metier" in detail:
 
-        st.markdown(
-            "### Exemple métier"
-        )
+        st.markdown("### Exemple métier")
 
         st.info(
             detail["exemple_metier"]
@@ -149,12 +124,12 @@ else:
         )
 
     with col2:
-        st.markdown("### Affichage")
+
         diagram_height = st.slider(
             "Hauteur du diagramme",
-            400,       
-            2500,      
-            900,       
+            400,
+            2500,
+            1000,
             100
         )
 
@@ -189,28 +164,18 @@ else:
         st.markdown(
             f"""
             <style>
-            .zoom-container {{
-                zoom:{zoom}%;
+            iframe {{
+                min-height: {diagram_height}px !important;
             }}
             </style>
             """,
             unsafe_allow_html=True
         )
 
-        st.markdown(
-            '<div class="zoom-container">',
-            unsafe_allow_html=True
-        )
-
         result = mermaid(
             diagram_code,
             theme="neutral",
-            key=selected_file.name
-        )
-
-        st.markdown(
-            "</div>",
-            unsafe_allow_html=True
+            key=f"{selected_file.name}_{diagram_height}"
         )
 
         if isinstance(
