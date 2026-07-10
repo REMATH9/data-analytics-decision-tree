@@ -1,1 +1,34 @@
+[
+  {
+    "rule": "excel_simple",
+    "conditions": {
+      "sources": "Excel",
+      "volume": "Petit"
+    },
+    "architecture": "Power BI simple"
+  },
 
+  {
+    "rule": "multi_source",
+    "conditions": {
+      "sources": "Multiple"
+    },
+    "architecture": "Data Mart ou Data Warehouse"
+  },
+
+  {
+    "rule": "big_volume",
+    "conditions": {
+      "volume": "Grand"
+    },
+    "architecture": "Data Warehouse"
+  },
+
+  {
+    "rule": "realtime",
+    "conditions": {
+      "temps_reel": true
+    },
+    "architecture": "Lakehouse / Fabric"
+  }
+]
