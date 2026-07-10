@@ -9,7 +9,6 @@ from utils.concepts import load_concepts
 
 st.title("Diagrammes")
 
-
 DIAGRAMS_DIR = Path("diagrams")
 
 
@@ -33,6 +32,11 @@ def enhance_mermaid(
     diagram_code,
     font_size
 ):
+    """
+    On garde le thème Mermaid par défaut.
+    Aucun changement de couleur.
+    Seulement la taille de police.
+    """
 
     return f"""
 %%{{init: {{
@@ -73,31 +77,19 @@ def display_concept(
 
     if "definition" in detail:
 
-        st.markdown(
-            "### Définition"
-        )
-
-        st.write(
-            detail["definition"]
-        )
+        st.markdown("### Définition")
+        st.write(detail["definition"])
 
     if "explication_simple" in detail:
 
-        st.markdown(
-            "### Explication simple"
-        )
-
+        st.markdown("### Explication simple")
         st.write(
-            detail[
-                "explication_simple"
-            ]
+            detail["explication_simple"]
         )
 
     if "exemple" in detail:
 
-        st.markdown(
-            "### Exemple"
-        )
+        st.markdown("### Exemple")
 
         st.code(
             detail["exemple"],
@@ -191,7 +183,7 @@ else:
             "Hauteur",
             1000,
             6000,
-            3000,
+            3500,
             100
         )
 
@@ -199,8 +191,8 @@ else:
 
         font_size = st.slider(
             "Texte",
-            14,
-            80,
+            12,
+            60,
             28,
             2
         )
@@ -262,13 +254,8 @@ else:
         )
 
         if (
-            isinstance(
-                result,
-                dict
-            )
-            and result.get(
-                "entity_clicked"
-            )
+            isinstance(result, dict)
+            and result.get("entity_clicked")
         ):
 
             clicked = result.get(
