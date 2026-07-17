@@ -1217,5 +1217,142 @@ DEFINITIONS = [{'title': 'Data Warehouse',
 {
     "title": "Real-Time",
     "definition": "Traitement instantané des données dès leur création."
-}
+},
+#Nouvelle fiche à partir d'ici
+{
+    "title": "ERP",
+    "definition": "Enterprise Resource Planning. Système central de gestion des processus métier de l’entreprise.",
+    "why": ["Centraliser les données métier.", "Gérer les opérations.", "Assurer la cohérence des processus."],
+    "when": ["Production.", "Achats.", "Finance.", "Stocks."],
+    "eloy": "L’ERP contient les commandes, articles, stocks et données de production.",
+    "schema": "ERP → ETL/ELT → Lakehouse/Data Warehouse"
+},
+
+{
+    "title": "CRM",
+    "definition": "Customer Relationship Management. Outil permettant de gérer les relations clients.",
+    "why": ["Suivre les clients.", "Gérer les opportunités.", "Centraliser les interactions."],
+    "when": ["Ventes.", "Marketing.", "Service client."],
+    "eloy": "Le CRM permet de suivre les prospects et clients."
+},
+
+{
+    "title": "SQL Databases",
+    "definition": "Bases de données relationnelles utilisant SQL pour stocker et interroger les données.",
+    "why": ["Structurer les données.", "Garantir l’intégrité.", "Faciliter les requêtes."],
+    "when": ["ERP.", "CRM.", "Applications métier."],
+    "eloy": "SQL Server est souvent utilisé pour stocker les données de production et de gestion."
+},
+
+{
+    "title": "Excel Files",
+    "definition": "Fichiers Excel ou CSV utilisés comme source de données.",
+    "why": ["Partage simple.", "Saisie manuelle.", "Exports utilisateurs."],
+    "when": ["Petits volumes.", "Analyses ponctuelles.", "Reporting temporaire."],
+    "eloy": "Des exports Excel provenant des équipes métiers alimentent certains pipelines."
+},
+
+{
+    "title": "APIs",
+    "definition": "Interfaces permettant à deux applications d’échanger des données.",
+    "why": ["Automatiser les échanges.", "Connecter des systèmes.", "Accéder aux données temps réel."],
+    "when": ["Applications cloud.", "ERP.", "CRM.", "Services web."],
+    "eloy": "Une API peut récupérer automatiquement des données d’un fournisseur."
+},
+
+{
+    "title": "IoT Devices",
+    "definition": "Equipements ou capteurs connectés générant des données en continu.",
+    "why": ["Mesurer.", "Surveiller.", "Analyser les équipements."],
+    "when": ["Industrie.", "Production.", "Maintenance."],
+    "eloy": "Des capteurs machine peuvent envoyer température, durée de cycle ou alertes."
+},
+
+{
+    "title": "External Sources",
+    "definition": "Sources de données provenant d’organisations externes.",
+    "why": ["Enrichir les analyses.", "Apporter du contexte.", "Compléter les données internes."],
+    "when": ["Open Data.", "Fournisseurs.", "Partenaires."],
+    "eloy": "Des données météo ou économiques peuvent compléter les analyses."
+},
+
+{
+    "title": "Standardization",
+    "definition": "Transformation visant à homogénéiser les formats de données.",
+    "why": ["Faciliter les analyses.", "Eviter les incohérences."],
+    "when": ["Dates.", "Unités.", "Devises."],
+    "eloy": "Toutes les dates sont converties dans un format unique."
+},
+
+{
+    "title": "Normalization",
+    "definition": "Harmonisation des données afin de garantir la cohérence des référentiels.",
+    "why": ["Eviter les doublons.", "Uniformiser les informations."],
+    "when": ["Clients.", "Produits.", "Fournisseurs."],
+    "eloy": "Les codes produits sont harmonisés avant intégration."
+},
+
+{
+    "title": "Data Integration",
+    "definition": "Fusion de plusieurs sources dans une vue cohérente.",
+    "why": ["Créer une vision unique.", "Croiser des données différentes."],
+    "when": ["ERP + CRM.", "Applications multiples."],
+    "eloy": "Fusion des données de production et de qualité."
+},
+
+{
+    "title": "Data Enrichment",
+    "definition": "Ajout d’informations complémentaires à une donnée existante.",
+    "why": ["Apporter du contexte.", "Améliorer l’analyse."],
+    "when": ["Référentiels.", "Données externes."],
+    "eloy": "Ajout de la région à partir d’un code postal."
+},
+
+{
+    "title": "Business Rules",
+    "definition": "Règles métier appliquées aux données durant les traitements.",
+    "why": ["Garantir la cohérence.", "Respecter les règles opérationnelles."],
+    "when": ["Transformation.", "Validation."],
+    "eloy": "Un montant négatif est envoyé en zone de rejet."
+},
+
+{
+    "title": "Validation",
+    "definition": "Contrôle permettant de vérifier la qualité et la cohérence des données.",
+    "why": ["Détecter les erreurs.", "Garantir la fiabilité."],
+    "when": ["Avant ou après chargement."],
+    "eloy": "Contrôle des valeurs manquantes avant chargement."
+},
+
+{
+    "title": "Aggregation",
+    "definition": "Regroupement de données à un niveau synthétique.",
+    "why": ["Améliorer les performances.", "Créer des KPIs."],
+    "when": ["Reporting.", "Tableaux de bord."],
+    "eloy": "Calcul des ventes mensuelles par site."
+},
+
+{
+    "title": "Data Modeling",
+    "definition": "Organisation des données en tables et relations adaptées à l’analyse.",
+    "why": ["Faciliter le reporting.", "Améliorer les performances."],
+    "when": ["Data Warehouse.", "Power BI.", "Lakehouse Gold."],
+    "eloy": "Création de Fact_Production et Dim_Date."
+},
+
+{
+    "title": "Load Methods",
+    "definition": "Ensemble des méthodes permettant de charger les données dans une cible."
+},
+
+{
+    "title": "Processing Types",
+    "definition": "Différents modes d’exécution des traitements de données."
+},
+
+{
+    "title": "Targets",
+    "definition": "Destinations finales des données après traitement : Lakehouse, Warehouse, Data Mart ou modèle sémantique."
+},
+               
 ]
