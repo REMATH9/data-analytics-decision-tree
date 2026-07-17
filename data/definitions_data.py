@@ -1218,3 +1218,4 @@ DEFINITIONS = [{'title': 'Data Warehouse',
     "title": "Real-Time",
     "definition": "Traitement instantané des données dès leur création."
 }
+]
