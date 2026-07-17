@@ -982,7 +982,7 @@ DEFINITIONS = [{'title': 'Data Warehouse',
   'errors': ['Documentation créée une fois puis oubliée.',
              'Définitions trop techniques.',
              'Pas de propriétaire.',
-             'Nommer les champs de manière obscure.']}
+             'Nommer les champs de manière obscure.']},
 {
     "title": "ETL",
     "definition": "ETL signifie Extract, Transform, Load. Les données sont extraites depuis les sources, transformées puis chargées dans la cible.",
