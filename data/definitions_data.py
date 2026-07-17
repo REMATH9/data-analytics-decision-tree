@@ -983,3 +983,238 @@ DEFINITIONS = [{'title': 'Data Warehouse',
              'Définitions trop techniques.',
              'Pas de propriétaire.',
              'Nommer les champs de manière obscure.']}]
+{
+    "title": "ETL",
+    "definition": "ETL signifie Extract, Transform, Load. Les données sont extraites depuis les sources, transformées puis chargées dans la cible.",
+    "why": [
+        "Nettoyer les données avant chargement.",
+        "Garantir la qualité des données.",
+        "Centraliser les règles métier."
+    ],
+    "when": [
+        "Data Warehouse classique.",
+        "SQL Server.",
+        "Systèmes décisionnels historiques."
+    ],
+    "eloy": "Extraction des données ERP, nettoyage des valeurs invalides puis chargement dans le Data Warehouse.",
+    "schema": "Extract → Transform → Load",
+    "advantages": [
+        "Données propres dès le chargement.",
+        "Contrôle fort des transformations."
+    ],
+    "disadvantages": [
+        "Moins flexible.",
+        "Transformations parfois difficiles à rejouer."
+    ],
+    "errors": [
+        "Ne pas conserver le brut.",
+        "Créer un pipeline monolithique."
+    ]
+},
+{
+    "title": "ELT",
+    "definition": "ELT signifie Extract, Load, Transform. Les données sont chargées brutes puis transformées dans la plateforme cible.",
+    "why": [
+        "Conserver les données sources.",
+        "Rejouer les traitements facilement.",
+        "Profiter de la puissance du Lakehouse."
+    ],
+    "when": [
+        "Microsoft Fabric.",
+        "Databricks.",
+        "Lakehouse."
+    ],
+    "eloy": "Les fichiers bruts sont déposés en Bronze puis transformés en Silver et Gold.",
+    "schema": "Extract → Load → Transform",
+    "advantages": [
+        "Historique complet.",
+        "Très flexible."
+    ],
+    "disadvantages": [
+        "Besoin de stockage supplémentaire.",
+        "Nécessite une bonne gouvernance."
+    ],
+    "errors": [
+        "Transformer directement en Bronze.",
+        "Ne pas tracer les transformations."
+    ]
+},
+{
+    "title": "Extract",
+    "definition": "Phase de récupération des données depuis les systèmes sources.",
+    "why": [
+        "Centraliser les données.",
+        "Préparer l'analyse."
+    ],
+    "when": [
+        "Début d'un pipeline ETL ou ELT."
+    ],
+    "eloy": "Extraction des données ERP, SharePoint et Excel.",
+    "schema": "Sources → Extract",
+    "advantages": [
+        "Centralisation des données."
+    ],
+    "disadvantages": [
+        "Dépendance aux systèmes sources."
+    ]
+},
+{
+    "title": "Transform",
+    "definition": "Phase de nettoyage, standardisation et enrichissement des données.",
+    "why": [
+        "Améliorer la qualité.",
+        "Uniformiser les formats."
+    ],
+    "when": [
+        "Avant exposition aux utilisateurs."
+    ],
+    "eloy": "Correction des NULL et des valeurs incohérentes.",
+    "schema": "Brut → Transformé",
+    "advantages": [
+        "Données fiables."
+    ],
+    "disadvantages": [
+        "Traitements parfois coûteux."
+    ]
+},
+{
+    "title": "Load",
+    "definition": "Chargement des données dans la cible analytique.",
+    "why": [
+        "Mettre les données à disposition."
+    ],
+    "when": [
+        "Après transformation."
+    ],
+    "eloy": "Chargement dans Fabric Warehouse ou Lakehouse.",
+    "schema": "Transform → Load",
+    "advantages": [
+        "Données exploitables."
+    ],
+    "disadvantages": [
+        "Coût de stockage."
+    ]
+},
+{
+    "title": "Data Cleaning",
+    "definition": "Nettoyage des données afin de garantir leur qualité.",
+    "why": [
+        "Supprimer les erreurs.",
+        "Traiter les valeurs manquantes."
+    ],
+    "when": [
+        "Transformation."
+    ],
+    "eloy": "Remplacement des NULL par 0 lorsque validé métier.",
+    "schema": "Données brutes → Données propres",
+    "advantages": [
+        "Qualité améliorée."
+    ],
+    "disadvantages": [
+        "Temps de traitement."
+    ]
+},
+{
+    "title": "Full Load",
+    "definition": "Rechargement complet de la table cible.",
+    "why": [
+        "Simplicité."
+    ],
+    "when": [
+        "Petits volumes."
+    ],
+    "eloy": "Recharge complète d'une table de référence.",
+    "schema": "DELETE → INSERT",
+    "advantages": [
+        "Facile à comprendre."
+    ],
+    "disadvantages": [
+        "Très coûteux sur gros volumes."
+    ]
+},
+{
+    "title": "Incremental Load",
+    "definition": "Chargement uniquement des nouvelles données ou des données modifiées.",
+    "why": [
+        "Réduire les temps de traitement."
+    ],
+    "when": [
+        "Grandes tables."
+    ],
+    "eloy": "Chargement uniquement des commandes créées depuis le dernier passage.",
+    "schema": "Dernier chargement → Nouveaux enregistrements",
+    "advantages": [
+        "Rapide.",
+        "Économique."
+    ],
+    "disadvantages": [
+        "Plus complexe à mettre en œuvre."
+    ]
+},
+{
+    "title": "Upsert",
+    "definition": "Mise à jour si la ligne existe sinon insertion.",
+    "why": [
+        "Synchroniser source et cible."
+    ],
+    "when": [
+        "Chargement incrémental."
+    ],
+    "eloy": "Mise à jour d'un client existant ou création si absent."
+},
+{
+    "title": "Merge",
+    "definition": "Synchronisation complète entre source et cible.",
+    "why": [
+        "Garder les tables cohérentes."
+    ],
+    "when": [
+        "SQL Server.",
+        "Fabric Warehouse."
+    ]
+},
+{
+    "title": "Watermark",
+    "definition": "Technique d'incrémental basée sur une date ou un identifiant de suivi.",
+    "why": [
+        "Identifier les nouveaux enregistrements."
+    ],
+    "when": [
+        "Sources disposant d'une DateModification."
+    ]
+},
+{
+    "title": "Partitioning",
+    "definition": "Découpage d'une table en partitions afin d'améliorer les performances.",
+    "why": [
+        "Réduire les temps de lecture.",
+        "Faciliter l'incremental refresh."
+    ],
+    "when": [
+        "Grands volumes."
+    ],
+    "eloy": "Partition par année de production.",
+    "schema": "2024 | 2025 | 2026",
+    "advantages": [
+        "Meilleures performances."
+    ],
+    "disadvantages": [
+        "Administration supplémentaire."
+    ]
+},
+{
+    "title": "Batch",
+    "definition": "Traitement planifié exécuté à intervalle régulier."
+},
+{
+    "title": "Micro-Batch",
+    "definition": "Petits traitements exécutés plusieurs fois par heure."
+},
+{
+    "title": "Streaming",
+    "definition": "Traitement continu des événements en temps réel."
+},
+{
+    "title": "Real-Time",
+    "definition": "Traitement instantané des données dès leur création."
+}
