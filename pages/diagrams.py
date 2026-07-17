@@ -147,6 +147,18 @@ def display_concept(
 
 concepts = load_concepts()
 
+st.write("Nombre de concepts chargés :", len(concepts))
+
+st.write(
+    sorted(
+        list(concepts.keys())
+    )[:50]
+)
+
+files = sorted(
+    DIAGRAMS_DIR.glob("*.md")
+)
+
 files = sorted(
     DIAGRAMS_DIR.glob("*.md")
 )
