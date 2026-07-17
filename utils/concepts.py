@@ -1,53 +1,65 @@
-import json
-from pathlib import Path
-
-
-DATA_DIR = Path("data")
-CONCEPTS_FILE = DATA_DIR / "concepts.json"
+from data.definitions_data import DEFINITIONS
 
 
 def load_concepts():
-    """
-    Charge tous les concepts depuis data/concepts.json
-    """
+    concepts = {}
 
-    if not CONCEPTS_FILE.exists():
-        return {}
+    for item in DEFINITIONS:
 
-    with open(
-        CONCEPTS_FILE,
-        "r",
-        encoding="utf-8"
-    ) as f:
+        title = item.get("title", "")
 
-        return json.load(f)
+        concepts[title] = {
+            "definition": item.get("definition", ""),
+
+            "explication_simple": item.get(
+                "definition",
+                ""
+            ),
+
+            "exemple": item.get(
+                "schema",
+                ""
+            ),
+
+            "quand_utiliser": item.get(
+                "when",
+                []
+            ),
+
+            "avantages": item.get(
+                "advantages",
+                []
+            ),
+
+            "limites": item.get(
+                "disadvantages",
+                []
+            ),
+
+            "exemple_metier": item.get(
+                "eloy",
+                ""
+            ),
+
+            "concepts_lies": []
+        }
+
+    return concepts
 
 
 def get_concept(name):
-    """
-    Retourne un concept spécifique
-    """
-
     concepts = load_concepts()
 
     return concepts.get(name)
 
 
 def concept_exists(name):
-    """
-    Vérifie qu'un concept existe
-    """
-
     concepts = load_concepts()
 
     return name in concepts
 
 
 def get_definition(name):
-    """
-    Retourne uniquement la définition
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -57,10 +69,6 @@ def get_definition(name):
 
 
 def get_simple_explanation(name):
-    """
-    Retourne l'explication simple
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -72,10 +80,6 @@ def get_simple_explanation(name):
 
 
 def get_example(name):
-    """
-    Retourne l'exemple
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -87,10 +91,6 @@ def get_example(name):
 
 
 def get_business_example(name):
-    """
-    Retourne l'exemple métier
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -102,10 +102,6 @@ def get_business_example(name):
 
 
 def get_when_to_use(name):
-    """
-    Retourne la liste des cas d'utilisation
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -118,10 +114,6 @@ def get_when_to_use(name):
 
 
 def get_advantages(name):
-    """
-    Retourne la liste des avantages
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -134,10 +126,6 @@ def get_advantages(name):
 
 
 def get_limits(name):
-    """
-    Retourne la liste des limites
-    """
-
     concept = get_concept(name)
 
     if not concept:
@@ -150,9 +138,6 @@ def get_limits(name):
 
 
 def search_concepts(search_text):
-    """
-    Recherche simple dans les concepts
-    """
 
     concepts = load_concepts()
 
@@ -170,10 +155,7 @@ def search_concepts(search_text):
 
         for value in details.values():
 
-            if isinstance(
-                value,
-                str
-            ):
+            if isinstance(value, str):
 
                 if search_text in value.lower():
 
@@ -187,9 +169,6 @@ def search_concepts(search_text):
 
 
 def get_all_concepts():
-    """
-    Retourne la liste des concepts
-    """
 
     concepts = load_concepts()
 
@@ -199,10 +178,6 @@ def get_all_concepts():
 
 
 def build_concept_card(name):
-    """
-    Crée un objet standardisé
-    pouvant être affiché dans Streamlit
-    """
 
     concept = get_concept(name)
 
@@ -248,13 +223,11 @@ def build_concept_card(name):
 
 
 def get_related_concepts(name):
-    """
-    Retourne les concepts liés
-    """
 
     concept = get_concept(name)
 
     if not concept:
+
         return []
 
     return concept.get(
