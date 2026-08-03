@@ -1356,3 +1356,6 @@ DEFINITIONS = [{'title': 'Data Warehouse',
 },
                
 ]
+from data.etl_packs_extension import ETL_PACKS
+
+DEFINITIONS.extend(ETL_PACKS)
