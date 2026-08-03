@@ -32,7 +32,7 @@ def enhance_mermaid(diagram_code):
 
     return f"""
 %%{{init: {{
-  "theme": "default",
+  "theme": "base",
   "flowchart": {{
       "useMaxWidth": false,
       "htmlLabels": true,
@@ -40,6 +40,18 @@ def enhance_mermaid(diagram_code):
       "rankSpacing": 80
   }},
   "themeVariables": {{
+      "background": "#0F172A",
+      "primaryColor": "#FACC15",
+      "primaryTextColor": "#000000",
+      "primaryBorderColor": "#CA8A04",
+      "secondaryColor": "#84CC16",
+      "secondaryTextColor": "#000000",
+      "secondaryBorderColor": "#4D7C0F",
+      "tertiaryColor": "#A855F7",
+      "tertiaryTextColor": "#FFFFFF",
+      "tertiaryBorderColor": "#7E22CE",
+      "mainBkg": "#2563EB",
+      "nodeBorder": "#1E40AF",
       "fontSize": "16px"
   }}
 }}}}%%
