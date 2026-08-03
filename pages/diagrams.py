@@ -40,7 +40,7 @@ def enhance_mermaid(diagram_code):
       "rankSpacing": 80
   }},
   "themeVariables": {{
-      "background": "#f0f1f5",
+      "background": "#2440ad",
       "primaryColor": "#FACC15",
       "primaryTextColor": "#000000",
       "primaryBorderColor": "#CA8A04",
